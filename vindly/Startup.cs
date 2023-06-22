@@ -58,6 +58,11 @@ namespace vindly
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                   name: "AddPage",
+                   pattern: "Add",
+                   defaults: new { controller = "Category", action = "Add" }
+               );
             });
         }
     }

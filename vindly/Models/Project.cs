@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace vindly.Models
 {
-    public class Category
+    public class Project
     {
         [Key]
         public int Id { get; set; }
@@ -20,5 +20,8 @@ namespace vindly.Models
 
         public double OT { get; set; }
 
+       
+
+       
     }
 }
