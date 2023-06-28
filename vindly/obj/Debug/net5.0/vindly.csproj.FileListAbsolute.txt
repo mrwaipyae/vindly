@@ -144,3 +144,8 @@ C:\Users\GIC\source\repos\vindly\vindly\obj\Debug\net5.0\vindly.pdb
 C:\Users\GIC\source\repos\vindly\vindly\obj\Debug\net5.0\vindly.genruntimeconfig.cache
 C:\Users\GIC\source\repos\vindly\vindly\obj\Debug\net5.0\vindly.csproj.AssemblyReference.cache
 C:\Users\GIC\source\repos\vindly\vindly\obj\Debug\net5.0\Razor\Views\Category\Add.cshtml.g.cs
+C:\Users\GIC\source\repos\vindly\vindly\obj\Debug\net5.0\Razor\Views\Category\_CategoryPartialView.cshtml.g.cs
+C:\Users\GIC\source\repos\vindly\vindly\bin\Debug\net5.0\EPPlus.dll
+C:\Users\GIC\source\repos\vindly\vindly\bin\Debug\net5.0\System.Xml.XPath.XmlDocument.dll
+C:\Users\GIC\source\repos\vindly\vindly\bin\Debug\net5.0\package-lock.json
+C:\Users\GIC\source\repos\vindly\vindly\bin\Debug\net5.0\package.json

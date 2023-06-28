@@ -1,76 +1,172 @@
-﻿@model IEnumerable<vindly.Models.Category>
-
-<div class="container p-3">
-    <div class="row pt-4">
-        <div class="col-6">
-            <h2 class="text-primary">Testing List</h2>
+﻿
+@model IEnumerable<vindly.Models.Category>
+<form id="filterForm">
+    <div class="container p-3">
+        <div class="row pt-4">
+            <div class="col-6">
+                <h2 class="text-primary">Testing List</h2>
+            </div>
+            <div class="col-6">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="filterOption" id="filterAll" value="all" checked>
+                    <label class="form-check-label" for="filterAll">All</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="filterOption" id="filterPMRD" value="pmrd">
+                    <label class="form-check-label" for="filterPMRD">PM/RD</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="filterOption" id="filterUTOT" value="utot">
+                    <label class="form-check-label" for="filterUTOT">UT/OT</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Apply Filter</button>
+            </div>
         </div>
+        <br /><br />
+        <button type="button" class="btn btn-primary mb-3" id="exportBtn">Export to Excel</button>
         
-    </div>
-    <br /><br />
 
-    @if(Model.Count()>0)
-    {
-        <table class="table table-bordered table-striped" style="width:100%">
-            <thead>
-                <tr>
-                    <th>Project Name</th>
-                    <th>PM</th>
-                    <th>RD</th>
-                    <th>UT</th>
-                    <th>OT</th>
-                    <th>Total</th>
-                    <th>Add</th>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    double pmTotal = 0; // Variable to store the total of PM values
-                    double rdTotal = 0;
-                    double utTotal = 0;
-                    double otTotal = 0;
-                    double allTotal = 0;
-                }
-                @foreach (var obj in Model)
-                {
-                    pmTotal += obj.PM; // Accumulate the PM value
-                    rdTotal += obj.RD;
-                    utTotal += obj.UT;
-                    otTotal += obj.OT;
-                    var total = obj.PM + obj.RD + obj.UT + obj.OT; // Calculate the total
-                    allTotal += total;
 
+        @if (Model.Count() > 0)
+        {
+            <table id="your-table-id" class="table table-bordered table-striped" style="width:100%">
+                <thead>
                     <tr>
-                        <td width="30%">@obj.Name</td>
-
-                        <td>@obj.PM</td>
-                        <td>@obj.RD</td>
-                        <td>@obj.UT</td>
-                        <td>@obj.OT</td>
-                        <td class="font-weight-bold">@total</td>
-                        <td>
-                            <a href="/Add" class="btn btn-primary">+</a>
-
-                        </td>
+                        <th>Project Name</th>
+                        <th>PM</th>
+                        <th>RD</th>
+                        <th>UT</th>
+                        <th>OT</th>
+                        <th>Total</th>
+                        <th>Add</th>
                     </tr>
+                </thead>
+                <tbody>
+                    @{
+                        double pmTotal = 0; // Variable to store the total of PM values
+                        double rdTotal = 0;
+                        double utTotal = 0;
+                        double otTotal = 0;
+                        double allTotal = 0;
+                    }
+                    @foreach (var obj in Model)
+                    {
+                        pmTotal += obj.PM; // Accumulate the PM value
+                        rdTotal += obj.RD;
+                        utTotal += obj.UT;
+                        otTotal += obj.OT;
+                        var total = obj.PM + obj.RD + obj.UT + obj.OT; // Calculate the total
+                        allTotal += total;
+
+                        <tr class="data-row">
+                            <td width="30%" class="project-name">@obj.Name</td>
+                            <td class="pm-value">@obj.PM</td>
+                            <td class="rd-value">@obj.RD</td>
+                            <td class="ut-value">@obj.UT</td>
+                            <td class="ot-value">@obj.OT</td>
+                            <td class="font-weight-bold total-value">@total</td>
+                            <td>
+                                <a href="#" class="btn btn-primary add-row">+</a>
+                            </td>
+                        </tr>
+                    }
+                    <tr class="font-weight-bold">
+                        <td>Total :</td>
+                        <td>@pmTotal</td>
+                        <td>@rdTotal</td>
+                        <td>@utTotal</td>
+                        <td>@otTotal</td>
+                        <td>@allTotal</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        }
+        else
+        {
+            <p>No Category exists.</p>
+        }
+    </div>
+</form>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://unpkg.com/exceljs/dist/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#exportBtn").click(function () {
+            // Create a new Excel package
+            var workbook = new ExcelJS.Workbook();
+            var worksheet = workbook.addWorksheet("Data");
+
+            // Add table headers
+            var headers = ["Project Name", "PM", "RD", "UT", "OT", "Total"];
+            var headerRow = worksheet.addRow(headers);
+
+            // Add data rows
+            $(".data-row").each(function () {
+                var rowData = [
+                    $(this).find(".project-name").text(),
+                    $(this).find(".pm-value").text(),
+                    $(this).find(".rd-value").text(),
+                    $(this).find(".ut-value").text(),
+                    $(this).find(".ot-value").text(),
+                    $(this).find(".total-value").text()
+                ];
+                worksheet.addRow(rowData);
+            });
+
+            // Auto-fit column widths
+            worksheet.columns.forEach((column) => {
+                column.width = 15;
+            });
+
+            // Generate a unique file name
+            var fileName = "data.xlsx";
+
+            // Save the workbook and trigger the download
+            workbook.xlsx.writeBuffer().then(function (data) {
+                var blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                saveAs(blob, fileName);
+            });
+        });
+        $('#filterForm').submit(function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            var selectedOption = $('input[name="filterOption"]:checked').val();
+            var url = ''; // Define a variable to store the URL for filtering
+
+            if (selectedOption === 'pmrd') {
+                url = '/Category/filter?query=pmrd'; // Replace with the actual route for filtering by 'pmrd' query
+            } else if (selectedOption === 'utot') {
+                url = '/Category/filter?query=utot'; // Replace with the actual route for filtering by 'utot' query
+            } else {
+                url = '/Category/filter?query=all'; // Replace with the default route for displaying all data
+            }
+
+            // Make an AJAX request to fetch the filtered data
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function (response) {
+                    // Update the table with the filtered data
+                    $('#your-table-id').html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.log(error); // Handle any errors
                 }
-                <tr class="font-weight-bold">
-                    <td>Total :</td>
-                    <td >@pmTotal</td>
-                    <td>@rdTotal</td>
-                    <td>@utTotal</td>
-                    <td>@otTotal</td>
-                    <td>@allTotal</td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <p>No Category exists.</p>
-    }
-</div>
+            });
+        });
+    });
+</script>
+
+
+
+
+
+
+
 
 
 

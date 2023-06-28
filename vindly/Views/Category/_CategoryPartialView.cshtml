@@ -1,0 +1,52 @@
+﻿@model IEnumerable<vindly.Models.Category>
+
+@if (Model.Count() > 0)
+{
+    <table id="your-table-id" class="table table-bordered table-striped" style="width: 100%">
+        <thead>
+            <tr>
+                <th>Project Name</th>
+                @if (Model.Any(c => c.PM > 0 || c.RD > 0))
+                {
+                    <th>PM</th>
+                    <th>RD</th>
+                }
+                @if (Model.Any(c => c.UT > 0 || c.OT > 0))
+                {
+                    <th>UT</th>
+                    <th>OT</th>
+                }
+                <th>Total</th>
+                <th>Add</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var obj in Model)
+            {
+                var total = obj.PM + obj.RD + obj.UT + obj.OT; // Calculate the total
+
+                <tr>
+                    <td width="30%">@obj.Name</td>
+                    @if (Model.Any(c => c.PM > 0 || c.RD > 0))
+                    {
+                        <td>@obj.PM</td>
+                        <td>@obj.RD</td>
+                    }
+                    @if (Model.Any(c => c.UT > 0 || c.OT > 0))
+                    {
+                        <td>@obj.UT</td>
+                        <td>@obj.OT</td>
+                    }
+                    <td>@total</td>
+                    <td>
+                        <a href="/Add" class="btn btn-primary">+</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No data matches the filter.</p>
+}

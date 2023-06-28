@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using vindly.Data;
 using vindly.Models;
 
@@ -16,6 +14,7 @@ namespace vindly.Controllers
         {
             _db = db;
         }
+
         public IActionResult Index()
         {
             IEnumerable<Category> objList = _db.Category;
@@ -26,5 +25,51 @@ namespace vindly.Controllers
         {
             return View();
         }
+
+        public IActionResult Filter(string query)
+        {
+            IEnumerable<Category> filteredData;
+
+            if (query == "all")
+            {
+                // No specific query selected, show all data
+                filteredData = _db.Category;
+            }
+            else if (query == "pmrd")
+            {
+                // Filter the data based on the 'PM/RD' query and select only the desired columns
+                filteredData = _db.Category.Where(category => category.PM > 0 || category.RD > 0)
+                                           .Select(category => new Category
+                                           {
+                                               Id = category.Id,
+                                               Name = category.Name,
+                                               PM = category.PM,
+                                               RD = category.RD
+                                           });
+            }
+            else if (query == "utot")
+            {
+                // Filter the data based on the 'UT/OT' query and select only the desired columns
+                filteredData = _db.Category.Where(category => category.UT > 0 || category.OT > 0)
+                                           .Select(category => new Category
+                                           {
+                                               Id = category.Id,
+                                               Name = category.Name,
+                                               UT = category.UT,
+                                               OT = category.OT
+                                           });
+            }
+            else
+            {
+                // Invalid query parameter, show all data
+                filteredData = _db.Category;
+            }
+
+            // Pass the filtered data to your partial view
+            return PartialView("_CategoryPartialView", filteredData);
+
+        
+        }
+
     }
 }

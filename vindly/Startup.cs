@@ -55,14 +55,23 @@ namespace vindly
 
             app.UseEndpoints(endpoints =>
             {
+
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapControllerRoute(
-                   name: "AddPage",
-                   pattern: "Add",
-                   defaults: new { controller = "Category", action = "Add" }
-               );
+                    name: "AddPage",
+                    pattern: "Add",
+                    defaults: new { controller = "Category", action = "Add" }
+                );
+
+                endpoints.MapControllerRoute(
+                    name: "filter",
+                    pattern: "Category/filter",
+                    defaults: new { controller = "Category", action = "Filter" }
+                );
+
             });
         }
     }
