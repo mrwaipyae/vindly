@@ -24,78 +24,78 @@
         </div>
         <br /><br />
         <button type="button" class="btn btn-primary mb-3" id="exportBtn">Export to Excel</button>
-        
-
-
-        @if (Model.Count() > 0)
-        {
-            <table id="your-table-id" class="table table-bordered table-striped" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>Project Name</th>
-                        <th>PM</th>
-                        <th>RD</th>
-                        <th>UT</th>
-                        <th>OT</th>
-                        <th>Total</th>
-                        <th>Add</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{
-                        double pmTotal = 0; // Variable to store the total of PM values
-                        double rdTotal = 0;
-                        double utTotal = 0;
-                        double otTotal = 0;
-                        double allTotal = 0;
-                    }
-                    @foreach (var obj in Model)
-                    {
-                        pmTotal += obj.PM; // Accumulate the PM value
-                        rdTotal += obj.RD;
-                        utTotal += obj.UT;
-                        otTotal += obj.OT;
-                        var total = obj.PM + obj.RD + obj.UT + obj.OT; // Calculate the total
-                        allTotal += total;
-
-                        <tr class="data-row">
-                            <td width="30%" class="project-name">@obj.Name</td>
-                            <td class="pm-value">@obj.PM</td>
-                            <td class="rd-value">@obj.RD</td>
-                            <td class="ut-value">@obj.UT</td>
-                            <td class="ot-value">@obj.OT</td>
-                            <td class="font-weight-bold total-value">@total</td>
-                            <td>
-                                <a href="#" class="btn btn-primary add-row">+</a>
-                            </td>
+       
+            @if (Model.Count() > 0)
+            {
+                <table id="your-table-id" class="table table-bordered table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Project Name</th>
+                            <th>PM</th>
+                            <th>RD</th>
+                            <th>UT</th>
+                            <th>OT</th>
+                            <th>Total</th>
+                            <th>Add</th>
                         </tr>
-                    }
-                    <tr class="font-weight-bold">
-                        <td>Total :</td>
-                        <td>@pmTotal</td>
-                        <td>@rdTotal</td>
-                        <td>@utTotal</td>
-                        <td>@otTotal</td>
-                        <td>@allTotal</td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @{
+                            double pmTotal = 0; // Variable to store the total of PM values
+                            double rdTotal = 0;
+                            double utTotal = 0;
+                            double otTotal = 0;
+                            double allTotal = 0;
+                        }
+                        @foreach (var obj in Model)
+                        {
+                            pmTotal += obj.PM; // Accumulate the PM value
+                            rdTotal += obj.RD;
+                            utTotal += obj.UT;
+                            otTotal += obj.OT;
+                            var total = obj.PM + obj.RD + obj.UT + obj.OT; // Calculate the total
+                            allTotal += total;
 
-        }
-        else
-        {
-            <p>No Category exists.</p>
-        }
-    </div>
+                            <tr class="data-row">
+                                <td width="30%" class="project-name">@obj.Name</td>
+                                <td class="pm-value">@obj.PM</td>
+                                <td class="rd-value">@obj.RD</td>
+                                <td class="ut-value">@obj.UT</td>
+                                <td class="ot-value">@obj.OT</td>
+                                <td class="font-weight-bold total-value">@total</td>
+                                <td>
+                                    <a href="#" class="btn btn-primary add-row">+</a>
+                                </td>
+                            </tr>
+                        }
+                        <tr class="font-weight-bold">
+                            <td>Total :</td>
+                            <td>@pmTotal</td>
+                            <td>@rdTotal</td>
+                            <td>@utTotal</td>
+                            <td>@otTotal</td>
+                            <td>@allTotal</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            }
+            else
+            {
+                <p>No Category exists.</p>
+            }
+        </div>
 </form>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://unpkg.com/exceljs/dist/exceljs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
 <script>
+   /*** 
     $(document).ready(function () {
-        $("#exportBtn").click(function () {
+        // Function to handle exporting to Excel
+        function exportToExcel() {
             // Create a new Excel package
             var workbook = new ExcelJS.Workbook();
             var worksheet = workbook.addWorksheet("Data");
@@ -130,10 +130,11 @@
                 var blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
                 saveAs(blob, fileName);
             });
-        });
-        $('#filterForm').submit(function (event) {
-            event.preventDefault(); // Prevent the default form submission
+        }
 
+       
+        // Function to handle filtering
+        function applyFilter() {
             var selectedOption = $('input[name="filterOption"]:checked').val();
             var url = ''; // Define a variable to store the URL for filtering
 
@@ -152,13 +153,254 @@
                 success: function (response) {
                     // Update the table with the filtered data
                     $('#your-table-id').html(response);
+
+                    // Rebind the click event handler for the export button
+                    $("#exportBtn").off("click").on("click", exportToExcel);
                 },
                 error: function (xhr, status, error) {
                     console.log(error); // Handle any errors
                 }
             });
+        }
+
+        // Bind the click event handler for the export button
+        $("#exportBtn").click(exportToExcel);
+
+        // Bind the form submission event handler for the filter form
+        $('#filterForm').submit(function (event) {
+            event.preventDefault(); // Prevent the default form submission
+            applyFilter();
         });
     });
+    ***/
+
+    /***
+    $(document).ready(function () {
+        // Function to handle exporting to Excel
+        function exportToExcel() {
+            // Create a new Excel package
+            var workbook = new ExcelJS.Workbook();
+            var worksheet = workbook.addWorksheet("Data");
+
+            // Add table headers
+            var headers = ["Project Name", "PM", "RD", "UT", "OT", "Total"];
+            var headerRow = worksheet.addRow(headers);
+
+            // Add data rows
+            $("#your-table-id tbody tr").each(function () {
+                var rowData = [
+                    $(this).find("td:nth-child(1)").text(),
+                    $(this).find("td:nth-child(2)").text(),
+                    $(this).find("td:nth-child(3)").text(),
+                    $(this).find("td:nth-child(4)").text(),
+                    $(this).find("td:nth-child(5)").text(),
+                    $(this).find("td:nth-child(6)").text()
+                ];
+                worksheet.addRow(rowData);
+            });
+
+            // Auto-fit column widths
+            worksheet.columns.forEach((column) => {
+                column.width = 15;
+            });
+
+            // Generate a unique file name
+            var fileName = "data.xlsx";
+
+            // Save the workbook and trigger the download
+            workbook.xlsx.writeBuffer().then(function (data) {
+                var blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                saveAs(blob, fileName);
+            });
+        }
+
+
+        // Function to handle filtering
+        function applyFilter() {
+            var selectedOption = $('input[name="filterOption"]:checked').val();
+            var url = ''; // Define a variable to store the URL for filtering
+
+            if (selectedOption === 'pmrd') {
+                url = '/Category/filter?query=pmrd'; // Replace with the actual route for filtering by 'pmrd' query
+            } else if (selectedOption === 'utot') {
+                url = '/Category/filter?query=utot'; // Replace with the actual route for filtering by 'utot' query
+            } else {
+                url = '/Category/filter?query=all'; // Replace with the default route for displaying all data
+            }
+
+            // Make an AJAX request to fetch the filtered data
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function (response) {
+                    // Update the table with the filtered data
+                    $('#your-table-id').html(response);
+
+                    // Rebind the click event handler for the export button
+                    $("#exportBtn").off("click").on("click", exportToExcel);
+                },
+                error: function (xhr, status, error) {
+                    console.log(error); // Handle any errors
+                }
+            });
+        }
+
+        // Bind the click event handler for the export button
+        $("#exportBtn").click(exportToExcel);
+
+        // Bind the form submission event handler for the filter form
+        $('#filterForm').submit(function (event) {
+            event.preventDefault(); // Prevent the default form submission
+            applyFilter();
+        });
+    });
+    ***/
+
+    $(document).ready(function () {
+        // Function to handle exporting to Excel
+        function exportToExcel() {
+            // Create a new Excel package
+            var workbook = new ExcelJS.Workbook();
+            var worksheet = workbook.addWorksheet("Data");
+
+            // Get the current filter option
+            var selectedOption = $('input[name="filterOption"]:checked').val();
+
+            // Define the table headers based on the filter option
+            var headers = [];
+            if (selectedOption === "pmrd") {
+                headers = ["Project Name", "PM", "RD", "Total"];
+            } else if (selectedOption === "utot") {
+                headers = ["Project Name", "UT", "OT", "Total"];
+            } else {
+                headers = ["Project Name", "PM", "RD", "UT", "OT", "Total"];
+            }
+
+            // Add table headers
+            var headerRow = worksheet.addRow(headers);
+
+            // Add data rows
+            $("#your-table-id tbody tr").each(function () {
+                var rowData = [];
+                if (selectedOption === "pmrd") {
+                    var pm = parseFloat($(this).find("td:nth-child(2)").text()) || 0;
+                    var rd = parseFloat($(this).find("td:nth-child(3)").text()) || 0;
+                    var total = pm + rd;
+                    rowData = [
+                        $(this).find("td:nth-child(1)").text(),
+                        pm,
+                        rd,
+                        total
+                    ];
+                } else if (selectedOption === "utot") {
+                    var ut = parseFloat($(this).find("td:nth-child(4)").text()) || 0;
+                    var ot = parseFloat($(this).find("td:nth-child(5)").text()) || 0;
+                    var total = ut + ot;
+                    rowData = [
+                        $(this).find("td:nth-child(1)").text(),
+                        ut,
+                        ot,
+                        total
+                    ];
+                } else {
+                    var pm = parseFloat($(this).find("td:nth-child(2)").text()) || 0;
+                    var rd = parseFloat($(this).find("td:nth-child(3)").text()) || 0;
+                    var ut = parseFloat($(this).find("td:nth-child(4)").text()) || 0;
+                    var ot = parseFloat($(this).find("td:nth-child(5)").text()) || 0;
+                    var total = pm + rd + ut + ot;
+                    rowData = [
+                        $(this).find("td:nth-child(1)").text(),
+                        pm,
+                        rd,
+                        ut,
+                        ot,
+                        total
+                    ];
+                }
+                worksheet.addRow(rowData);
+            });
+
+            // Auto-fit column widths
+            worksheet.columns.forEach((column) => {
+                column.width = 15;
+            });
+
+            // Generate a unique file name
+            var fileName = "data.xlsx";
+
+            // Save the workbook and trigger the download
+            workbook.xlsx.writeBuffer().then(function (data) {
+                var blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                saveAs(blob, fileName);
+            });
+        }
+
+        // Function to update table headers based on the filter option
+        function updateTableHeaders(filterOption) {
+            var headers = [];
+            if (filterOption === "pmrd") {
+                headers = ["Project Name", "PM", "RD", "Total"];
+            } else if (filterOption === "utot") {
+                headers = ["Project Name", "UT", "OT", "Total"];
+            } else {
+                headers = ["Project Name", "PM", "RD", "UT", "OT", "Total"];
+            }
+
+            // Clear existing header row
+            $("#your-table-id thead").empty();
+
+            // Add new header row
+            var headerRow = $("<tr></tr>");
+            headers.forEach(function (header) {
+                headerRow.append("<th>" + header + "</th>");
+            });
+            $("#your-table-id thead").append(headerRow);
+        }
+
+        // Function to handle filtering
+        function applyFilter() {
+            var selectedOption = $('input[name="filterOption"]:checked').val();
+            var url = ""; // Define a variable to store the URL for filtering
+
+            if (selectedOption === "pmrd") {
+                url = "/Category/filter?query=pmrd"; // Replace with the actual route for filtering by 'pmrd' query
+            } else if (selectedOption === "utot") {
+                url = "/Category/filter?query=utot"; // Replace with the actual route for filtering by 'utot' query
+            } else {
+                url = "/Category/filter?query=all"; // Replace with the default route for displaying all data
+            }
+
+            // Make an AJAX request to fetch the filtered data
+            $.ajax({
+                url: url,
+                method: "GET",
+                success: function (response) {
+                    // Update the table with the filtered data
+                    $("#your-table-id").html(response);
+
+                    // Update the table headers
+                    updateTableHeaders(selectedOption);
+
+                    // Rebind the click event handler for the export button
+                    $("#exportBtn").off("click").on("click", exportToExcel);
+                },
+                error: function (xhr, status, error) {
+                    console.log(error); // Handle any errors
+                }
+            });
+        }
+
+        // Bind the click event handler for the export button
+        $("#exportBtn").click(exportToExcel);
+
+        // Bind the form submission event handler for the filter form
+        $("#filterForm").submit(function (event) {
+            event.preventDefault(); // Prevent the default form submission
+            applyFilter();
+        });
+    });
+
+
 </script>
 
 
